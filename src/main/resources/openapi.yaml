@@ -1,0 +1,122 @@
+openapi: 3.0.3
+info:
+  title: Vision Module API
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+    description: Local machine
+paths:
+  /radar:
+    post:
+      summary: Processes vision scan data and calculates target coordinates
+      operationId: getTargetCoordinates
+      requestBody:
+        description: Vision scan data for processing
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VisionScanRequestDto'
+      responses:
+        '200':
+          description: Successfully calculated target coordinates
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TargetCoordinatesDto'
+        '400':
+          description: No valid target found for given protocols
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+components:
+  schemas:
+    VisionScanRequestDto:
+      type: object
+      required:
+        - protocols
+        - scan
+      properties:
+        protocols:
+          type: array
+          items:
+            type: string
+            format: protocol
+            example: avoid-mech
+            description: List of protocols to be followed.
+        scan:
+          type: array
+          items:
+            $ref: '#/components/schemas/ScanDto'
+    ScanDto:
+      type: object
+      required:
+        - coordinates
+        - target
+      properties:
+        coordinates:
+          type: object
+          $ref: '#/components/schemas/ScanCoordinatesDto'
+        target:
+          type: object
+          $ref: '#/components/schemas/ScanTargetDto'
+        allies:
+          type: integer
+          format: int64
+    ScanCoordinatesDto:
+      required:
+        - x
+        - y
+      properties:
+        x:
+          type: number
+          format: bigDecimal
+          example: 0
+        y:
+          type: number
+          format: bigDecimal
+          example: 40
+    ScanTargetDto:
+      required:
+        - type
+        - number
+      properties:
+        type:
+          type: string
+          description: Type of enemy detected.
+          example: soldier
+        number:
+          type: integer
+          format: int64
+          description: Number of enemies detected.
+          example: 10
+    TargetCoordinatesDto:
+      required:
+        - x
+        - y
+      properties:
+        x:
+          type: number
+          format: bigDecimal
+          description: X-coordinate of the calculated target.
+          example: 0
+        y:
+          type: number
+          format: bigDecimal
+          description: Y-coordinate of the calculated target.
+          example: 40
+    ErrorResponseDto:
+      type: object
+      required:
+        - title
+        - status
+        - detail
+      properties:
+        title:
+          type: string
+        status:
+          type: string
+          format: httpStatus
+        detail:
+          type: string
