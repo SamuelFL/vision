@@ -3,6 +3,7 @@ package com.yvh.vision.web.rest;
 import com.yvh.vision.application.commands.CalculateTargetCoordinatesCommand;
 import com.yvh.vision.application.usecases.CalculateTargetCoordinates;
 import com.yvh.vision.web.rest.api.RadarApi;
+import com.yvh.vision.web.rest.converter.CoordinatesConverter;
 import com.yvh.vision.web.rest.converter.ProtocolConverter;
 import com.yvh.vision.web.rest.converter.ScanConverter;
 import com.yvh.vision.web.rest.model.TargetCoordinatesDto;
@@ -19,12 +20,14 @@ public class TargetSelectorController implements RadarApi {
 
     private final ScanConverter scanConverter;
     private final ProtocolConverter protocolConverter;
+    private final CoordinatesConverter coordinatesConverter;
 
     public TargetSelectorController(CalculateTargetCoordinates calculateTargetCoordinates,
-                                    ScanConverter scanConverter, ProtocolConverter protocolConverter) {
+                                    ScanConverter scanConverter, ProtocolConverter protocolConverter, CoordinatesConverter coordinatesConverter) {
         this.calculateTargetCoordinates = calculateTargetCoordinates;
         this.scanConverter = scanConverter;
         this.protocolConverter = protocolConverter;
+        this.coordinatesConverter = coordinatesConverter;
     }
 
     @Override
@@ -32,6 +35,6 @@ public class TargetSelectorController implements RadarApi {
         CalculateTargetCoordinatesCommand command = new CalculateTargetCoordinatesCommand(
                 protocolConverter.toEntity(visionScanRequestDto.getProtocols()),
                 scanConverter.toEntity(visionScanRequestDto.getScan()));
-        return ResponseEntity.ok(calculateTargetCoordinates.execute(command));
+        return ResponseEntity.ok(coordinatesConverter.toDto(calculateTargetCoordinates.execute(command)));
     }
 }
