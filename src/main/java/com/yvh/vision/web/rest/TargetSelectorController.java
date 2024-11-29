@@ -23,7 +23,9 @@ public class TargetSelectorController implements RadarApi {
     private final CoordinatesConverter coordinatesConverter;
 
     public TargetSelectorController(CalculateTargetCoordinates calculateTargetCoordinates,
-                                    ScanConverter scanConverter, ProtocolConverter protocolConverter, CoordinatesConverter coordinatesConverter) {
+                                    ScanConverter scanConverter,
+                                    ProtocolConverter protocolConverter,
+                                    CoordinatesConverter coordinatesConverter) {
         this.calculateTargetCoordinates = calculateTargetCoordinates;
         this.scanConverter = scanConverter;
         this.protocolConverter = protocolConverter;

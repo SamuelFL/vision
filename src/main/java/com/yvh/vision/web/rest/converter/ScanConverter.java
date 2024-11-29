@@ -3,7 +3,6 @@ package com.yvh.vision.web.rest.converter;
 import com.yvh.vision.application.util.Validator;
 import com.yvh.vision.core.model.ScanDataTarget;
 import com.yvh.vision.web.rest.model.ScanDto;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -11,8 +10,11 @@ import java.util.List;
 
 @Component
 public class ScanConverter implements Converter<ScanDataTarget, ScanDto> {
-    @Autowired
-    TargetConverter targetConverter;
+    private final TargetConverter targetConverter;
+
+    public ScanConverter(TargetConverter targetConverter) {
+        this.targetConverter = targetConverter;
+    }
 
     @Override
     public ScanDataTarget toEntity(ScanDto dto) {
